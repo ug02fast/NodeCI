@@ -13,8 +13,16 @@ export const handleToken = token => async dispatch => {
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const submitBlog = (values, history) => async dispatch => {
-  const res = await axios.post('/api/blogs', values);
+export const submitBlog = (values, file, history) => async dispatch => {
+  const uploadConfig = await axios.get('/api/upload');
+  await axios.put(uploadConfig.data.url, file, {
+    headers: {
+      'Content-Type': file.type,
+    }
+  });
+  const res = await axios.post('/api/blogs', {
+    ...values, imageUrl: uploadConfig.data.key,
+  });
 
   history.push('/blogs');
   dispatch({ type: FETCH_BLOG, payload: res.data });
@@ -31,3 +39,5 @@ export const fetchBlog = id => async dispatch => {
 
   dispatch({ type: FETCH_BLOG, payload: res.data });
 };
+
+// CORS error when you are on a domain like localhost trying to make a request to another domain like aws domain.
