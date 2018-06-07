@@ -3,4 +3,7 @@ nohup.out
 .DS_Store
 config/dev.js
 dev.js
+config
+/config
 config/
+/config/
